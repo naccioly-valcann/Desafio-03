@@ -1,5 +1,5 @@
 # HelloReact app
-
+Resolução: Nathália Accioly
 ## Available Scripts
 
 In the project directory, you can run:
