@@ -1,26 +1,23 @@
 #!/bin/bash
-# Este script roda em AfterInstall, onde os arquivos JÁ FORAM copiados para /appdir.
+# Este script roda em AfterInstall.
 
-echo "Iniciando instalação de dependências..."
+echo "Iniciando instalação de dependências e configuração do Supervisor..."
 
-# Navega para o diretório de destino onde os arquivos foram copiados
 cd /appdir
-
-# O package.json AGORA deve estar aqui
-if [ -f package.json ]; then
-  echo "package.json encontrado. Executando npm install..."
-  
-  # Instala as dependências
-  npm install 
-  
-  if [ $? -eq 0 ]; then
-    echo "npm install concluído com sucesso."
-  else
-    echo "ERRO: Falha no npm install."
-    exit 1
-  fi
-else
-  # Esta falha indica um problema de cópia ou permissão, mas agora é menos provável
-  echo "ERRO CRÍTICO: package.json não está em /appdir. Verifique appspec.yml (files section)."
+npm install
+if [ $? -ne 0 ]; then
+  echo "ERRO: Falha no npm install."
   exit 1
 fi
+
+CONFIG_FILE="<NOME-APP>.conf"
+SUPERVISOR_CONF_DIR="/etc/supervisor/conf.d"
+
+if [ -f "$CONFIG_FILE" ]; then
+    cp "$CONFIG_FILE" "$SUPERVISOR_CONF_DIR/$CONFIG_FILE"
+    echo "Arquivo de configuração do Supervisor copiado para $SUPERVISOR_CONF_DIR."
+else
+    echo "AVISO: Arquivo de configuração $CONFIG_FILE não encontrado em /appdir. Continuando..."
+fi
+
+exit 0
