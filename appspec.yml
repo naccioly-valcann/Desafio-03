@@ -2,7 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /appdir # Mantido: Garante que todos os arquivos, incluindo package.json, são copiados aqui.
+    destination: /appdir
+  - source: /app.conf
+    destination: /etc/supervisor/conf.d/
 hooks:
   ApplicationStop:
     - location: scripts/stop.sh
@@ -20,3 +22,9 @@ hooks:
     - location: scripts/start.sh
       timeout: 300
       runas: root
+permissions:
+  - object: scripts
+    pattern: "**"
+    mode: 755
+    owner: root
+    group: root
