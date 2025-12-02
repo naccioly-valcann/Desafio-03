@@ -6,6 +6,10 @@ files:
   - source: /app.conf
     destination: /etc/supervisor/conf.d/
 hooks:
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 300
+      runas: root
   BeforeInstall:
     - location: scripts/prepare_dir.sh 
       timeout: 60
@@ -18,13 +22,4 @@ hooks:
     - location: scripts/start.sh
       timeout: 300
       runas: root
-  ApplicationStop:
-    - location: scripts/stop.sh
-      timeout: 300
-      runas: root
-permissions:
-  - object: scripts
-    pattern: "**"
-    mode: 755
-    owner: root
-    group: root
+      
