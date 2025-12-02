@@ -12,12 +12,8 @@ hooks:
     - location: scripts/prepare_dir.sh
       timeout: 60
       runas: root
-  AfterInstall:
-    - location: scripts/install.sh
-      timeout: 600
-      runas: root
   ApplicationStart:
     - location: scripts/start.sh
-      timeout: 300
+      timeout: 800
       runas: root
       
