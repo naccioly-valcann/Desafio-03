@@ -3,21 +3,11 @@ os: linux
 files:
   - source: /
     destination: /appdir
-  - source: /app.conf
-    destination: /etc/supervisor/conf.d/
 hooks:
   ApplicationStop:
     - location: scripts/stop.sh
       timeout: 300
       runas: root
-  BeforeInstall:
-    - location: scripts/prepare_dir.sh 
-      timeout: 60
-      runas: root
-  AfterInstall:
-    - location: scripts/install.sh
-      timeout: 600 # O npm install pode demorar, aumente o tempo limite.
-      runas: root   
   ApplicationStart:
     - location: scripts/start.sh
       timeout: 300
