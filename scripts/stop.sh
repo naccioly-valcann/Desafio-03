@@ -1,4 +1,4 @@
 #!/bin/bash
 nomeApp="nacciolyapp"
 
-sudo supervisorctl stop $nomeApp
+sudo supervisorctl stop $nomeApp || true
