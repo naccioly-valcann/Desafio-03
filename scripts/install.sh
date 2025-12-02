@@ -10,7 +10,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-CONFIG_FILE="<NOME-APP>.conf"
+CONFIG_FILE="app.conf"
 SUPERVISOR_CONF_DIR="/etc/supervisor/conf.d"
 
 if [ -f "$CONFIG_FILE" ]; then

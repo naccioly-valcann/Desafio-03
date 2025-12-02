@@ -1,4 +1,4 @@
 #!/bin/bash
-nomeApp="<NOME-APP>"
+nomeApp="nacciolyapp"
 
 sudo supervisorctl stop $nomeApp
