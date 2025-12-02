@@ -1,17 +1,32 @@
 #!/bin/bash
 
-# 1. Navega para o diretório de destino
-cd /appdir
+# --- Passo de Diagnóstico ---
+echo "--- DIAGNÓSTICO DO CAMINHO DO PACKAGE.JSON ---"
+# Procura o arquivo package.json em todo o sistema (limitando a /home e /opt/codedeploy-agent)
+# NOTA: O CodeDeploy baixa os arquivos para /opt/codedeploy-agent/deployment-root/... antes de copiar para o destino.
+# Vamos procurar na pasta raiz de deploy do agente e na pasta de destino (/appdir).
 
-# 2. Verifica onde o script está rodando (opcional, para debug)
-echo "Diretório de trabalho atual: $(pwd)"
+FIND_RESULT=$(find /appdir /opt/codedeploy-agent/deployment-root -name "package.json" 2>/dev/null)
 
-# 3. Verifica se o arquivo package.json existe
-if [ -f package.json ]; then
-  echo "package.json encontrado. Iniciando npm install..."
-  # Instala as dependências
-  npm install
+if [ -n "$FIND_RESULT" ]; then
+    echo "✅ package.json ENCONTRADO em:"
+    echo "$FIND_RESULT"
 else
-  echo "ERRO: package.json não encontrado em /appdir. Verifique o appspec.yml e o pacote de deploy."
-  exit 1 # Força a falha do hook para uma mensagem clara no log do CodeDeploy
+    echo "❌ package.json NÃO ENCONTRADO em /appdir ou no cache do CodeDeploy."
+fi
+echo "------------------------------------------------"
+
+# --- Passo de Instalação (Original) ---
+echo "--- INICIANDO INSTALAÇÃO ---"
+DEPLOY_PATH="/appdir" # Define o caminho de destino conforme appspec.yml
+
+if [ -f "$DEPLOY_PATH/package.json" ]; then
+    echo "Navegando para $DEPLOY_PATH..."
+    cd $DEPLOY_PATH
+    npm install
+    echo "Instalação concluída com sucesso!"
+    exit 0 # Sucesso
+else
+    echo "FALHA CRÍTICA: package.json não está em $DEPLOY_PATH."
+    exit 1 # Falha
 fi
